@@ -3,6 +3,7 @@ package by.bntu.tarazenko.hostelrestful.security.jwt;
 import java.util.Date;
 
 import by.bntu.tarazenko.hostelrestful.security.services.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.*;
 
 @Component
+@Slf4j
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
@@ -34,6 +36,7 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
+        log.debug("Token - {}", token);
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
