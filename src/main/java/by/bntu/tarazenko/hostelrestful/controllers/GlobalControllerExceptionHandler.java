@@ -1,6 +1,5 @@
 package by.bntu.tarazenko.hostelrestful.controllers;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
@@ -22,6 +22,13 @@ import by.bntu.tarazenko.hostelrestful.services.exceptions.*;
 @Slf4j
 @ControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Object> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        log.warn("Max size exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.EXPECTATION_FAILED, ex.getClass().getName(), "File too large!");
+        return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
