@@ -47,4 +47,22 @@ public class UserController {
 
         return  ResponseEntity.ok(userDTOs);
     }
+
+    @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") long userId){
+        log.debug("Start delete user with id - {}", userId);
+        userService.deleteUser(userId);
+        return  ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{userId}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateUser(@PathVariable("userId") long userId, @RequestBody User user){
+        user.setId(userId);
+        log.debug("Update user - {}", user);
+        User updateUser = userService.updateUser(user);
+        log.debug("After update user - {}", updateUser);
+        return  ResponseEntity.ok(userConverter.toUserDTO(updateUser));
+    }
 }
