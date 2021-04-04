@@ -27,7 +27,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> getUser(@PathVariable("userId") long userId){
+    public ResponseEntity<?> getUser(@PathVariable("userId") Long userId){
         User user = userService.getUser(userId);
         log.debug("User - {}", user);
         return  ResponseEntity.ok(userConverter.toUserDTO(user));
@@ -50,7 +50,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") long userId){
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId){
         log.debug("Start delete user with id - {}", userId);
         userService.deleteUser(userId);
         return  ResponseEntity.ok().build();
@@ -58,7 +58,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> updateUser(@PathVariable("userId") long userId, @RequestBody User user){
+    public ResponseEntity<?> updateUser(@PathVariable("userId") Long userId, @RequestBody User user){
         user.setId(userId);
         log.debug("Update user - {}", user);
         User updateUser = userService.updateUser(user);

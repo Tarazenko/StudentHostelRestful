@@ -26,7 +26,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     return fileRepository.save(FileDB);
   }
 
-  public File getFile(String id) {
+  public File getFile(Long id) {
     return fileRepository.findById(id).get();
   }
   

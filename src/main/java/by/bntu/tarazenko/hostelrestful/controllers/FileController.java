@@ -42,7 +42,7 @@ public class FileController {
       String fileDownloadUri = ServletUriComponentsBuilder
           .fromCurrentContextPath()
           .path("/files/")
-          .path(dbFile.getId())
+          .path(dbFile.getId().toString())
           .toUriString();
 
       return new FileDTO(
@@ -56,7 +56,7 @@ public class FileController {
   }
 
   @GetMapping("/files/{id}")
-  public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+  public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
     File file = storageService.getFile(id);
 
     return ResponseEntity.ok()
