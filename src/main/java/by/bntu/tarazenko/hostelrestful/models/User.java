@@ -38,12 +38,12 @@ public class User {
     private String patronymic;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 30)
     @Email
     private String email;
 
     @NotBlank
-    @Size(max = 120)
+    @Size(max = 20)
     private String password;
 
     /*@ManyToMany(fetch = FetchType.LAZY)
