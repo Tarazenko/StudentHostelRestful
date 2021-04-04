@@ -3,7 +3,7 @@ package by.bntu.tarazenko.hostelrestful.controllers;
 import by.bntu.tarazenko.hostelrestful.converters.UserConverter;
 import by.bntu.tarazenko.hostelrestful.models.User;
 import by.bntu.tarazenko.hostelrestful.models.dtos.UserDTO;
-import by.bntu.tarazenko.hostelrestful.services.impl.UserServiceImpl;
+import by.bntu.tarazenko.hostelrestful.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Autowired
     UserConverter userConverter;
