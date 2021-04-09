@@ -11,11 +11,4 @@ public class FileDTO {
   private String type;
   private Long id;
   private long size;
-
-  public FileDTO(String name, String url, String type, long size) {
-    this.name = name;
-    this.url = url;
-    this.type = type;
-    this.size = size;
-  }
 }
