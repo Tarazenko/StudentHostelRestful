@@ -26,9 +26,11 @@ public class Document {
     @JoinColumn(name = "categories_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+/*    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "documents_files",
             joinColumns = @JoinColumn(name = "documents_id"),
-            inverseJoinColumns = @JoinColumn(name = "files_id"))
-    private Set<File> files = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "files_id"))*/
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "files_id", referencedColumnName = "id")
+    private File file;
 }

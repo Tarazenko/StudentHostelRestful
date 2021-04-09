@@ -1,6 +1,8 @@
 package by.bntu.tarazenko.hostelrestful.controllers;
 
 import by.bntu.tarazenko.hostelrestful.models.Category;
+import by.bntu.tarazenko.hostelrestful.models.Document;
+import by.bntu.tarazenko.hostelrestful.repository.DocumentRepository;
 import by.bntu.tarazenko.hostelrestful.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class DocumentController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    DocumentRepository documentRepository;
 
     @GetMapping("/categories")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
@@ -50,6 +55,22 @@ public class DocumentController {
         Category savedCategory = categoryService.save(category);
         log.debug("Saved category - {}", category);
         return  ResponseEntity.ok(category);
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<List<Document>> getDocuments() {
+        List<Document>  documents = documentRepository.findAll();
+        log.debug("Documents - {}", documents);
+        return  ResponseEntity.ok(documents);
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<Document> getDocuments(@RequestBody Document requestDocument) {
+        Document document = documentRepository.save(requestDocument);
+        log.debug("Document - {}", document);
+        return  ResponseEntity.ok(document);
     }
 
 }
