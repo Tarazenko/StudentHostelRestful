@@ -5,8 +5,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -58,6 +61,20 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<Object> handleUnauthorizedException(AccessDeniedException ex) {
+        log.error("Unauthorized exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.FORBIDDEN, ex.getClass().getName(), ex.getMessage());
+        return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
+        log.error("Bad credentials exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.UNAUTHORIZED, ex.getClass().getName(), ex.getMessage());
+        return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
+    }
+
     @ExceptionHandler(SQLException.class)
     protected ResponseEntity<Object> handleSqlException(SQLException ex) {
         log.warn("Invalid order exception stack: {} ", Arrays.toString(ex.getStackTrace()));
@@ -78,7 +95,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleAll(Exception ex) {
-        log.warn("Server exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        log.error("Server exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        log.info("Exception {}", ex);
         ErrorDTO errorDto =
                 new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "error occurred");
         return new ResponseEntity<>(errorDto, new HttpHeaders(), errorDto.getHttpStatus());

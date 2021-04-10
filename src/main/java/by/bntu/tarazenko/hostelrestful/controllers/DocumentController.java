@@ -35,7 +35,6 @@ public class DocumentController {
     DocumentConverter documentConverter;
 
     @GetMapping("/categories")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Category>> getCategories() {
         List<Category> categories = categoryService.getAll();
         log.debug("Categories count - {}", categories.size());
@@ -67,7 +66,6 @@ public class DocumentController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<DocumentDTO>> getDocuments() {
         List<DocumentDTO> documents = documentService.getAll().stream().map(document ->
                 documentConverter.toDocumentDTO(document)
@@ -86,6 +84,7 @@ public class DocumentController {
     }
 
     @GetMapping("/{documentId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<DocumentDTO> getDocument(@PathVariable("documentId") Long documentId) {
         log.info("Getting document by id - {}", documentId);
         Document document = documentService.getById(documentId);

@@ -7,6 +7,7 @@ import by.bntu.tarazenko.hostelrestful.repository.DocumentRepository;
 import by.bntu.tarazenko.hostelrestful.services.CategoryService;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.CategoryAlreadyExistException;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -44,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         Category category = checkExistById(id);
         List<Document> documents = documentRepository.findByCategory(category);
+        log.debug("Rely documents - {}", documents);
         documents.forEach(document -> {
             documentRepository.deleteById(document.getId());
         });

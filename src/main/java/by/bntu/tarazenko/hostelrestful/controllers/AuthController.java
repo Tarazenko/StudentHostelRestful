@@ -56,15 +56,11 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        log.debug("Login request - {} ", loginRequest);
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
-        log.debug("Jwt - {}", jwt);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -78,8 +74,6 @@ public class AuthController {
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles);
-
-        log.debug("JWT response - {}", jwtResponse);
 
         return ResponseEntity.ok(jwtResponse);
     }
