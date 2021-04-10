@@ -8,6 +8,7 @@ import by.bntu.tarazenko.hostelrestful.models.dtos.DocumentDTO;
 import by.bntu.tarazenko.hostelrestful.repository.DocumentRepository;
 import by.bntu.tarazenko.hostelrestful.repository.FileRepository;
 import by.bntu.tarazenko.hostelrestful.services.CategoryService;
+import by.bntu.tarazenko.hostelrestful.services.DocumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,7 @@ public class DocumentController {
     CategoryService categoryService;
 
     @Autowired
-    DocumentRepository documentRepository;
-
-    @Autowired
-    FileRepository fileRepository;
+    DocumentService documentService;
 
     @Autowired
     DocumentConverter documentConverter;
@@ -47,7 +45,7 @@ public class DocumentController {
     @DeleteMapping("/categories/{categoryId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> deleteCategory(@PathVariable("categoryId") Long categoryId) {
-        log.debug("Delete category with id - {}", categoryId);
+        log.debug("Delete category with id - {} and all rely documents", categoryId);
         categoryService.deleteById(categoryId);
         return ResponseEntity.ok().build();
     }
@@ -71,9 +69,8 @@ public class DocumentController {
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<DocumentDTO>> getDocuments() {
-        List<DocumentDTO> documents = documentRepository.findAll().stream().map(document -> {
-                    return documentConverter.toDocumentDTO(document);
-                }
+        List<DocumentDTO> documents = documentService.getAll().stream().map(document ->
+                documentConverter.toDocumentDTO(document)
         ).collect(Collectors.toList());
         log.debug("Documents - {}", documents);
         return ResponseEntity.ok(documents);
@@ -81,11 +78,36 @@ public class DocumentController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<Document> getDocuments(@RequestBody Document requestDocument) {
-        File file = fileRepository.findById(requestDocument.getFile().getId()).get();
-        requestDocument.setFile(file);
+    public ResponseEntity<Document> createDocument(@RequestBody Document requestDocument) {
         log.debug("Document request - {}", requestDocument);
-        Document document = documentRepository.save(requestDocument);
+        Document document = documentService.create(requestDocument);
+        log.debug("Document - {}", document);
+        return ResponseEntity.ok(document);
+    }
+
+    @GetMapping("/{documentId}")
+    public ResponseEntity<DocumentDTO> getDocument(@PathVariable("documentId") Long documentId) {
+        log.info("Getting document by id - {}", documentId);
+        Document document = documentService.getById(documentId);
+        log.info("Get document - {}", document);
+        return ResponseEntity.ok(documentConverter.toDocumentDTO(document));
+    }
+
+    @DeleteMapping("/{documentId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<?> deleteDocument(@PathVariable("documentId") Long documentId) {
+        log.info("Deleting document by id - {}", documentId);
+        documentService.deleteById(documentId);
+        log.info("Delete successful.");
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("/{documentId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<Document> updateDocument(@RequestBody Document requestDocument) {
+        log.debug("Document request - {}", requestDocument);
+        Document document = documentService.update(requestDocument);
         log.debug("Document - {}", document);
         return ResponseEntity.ok(document);
     }

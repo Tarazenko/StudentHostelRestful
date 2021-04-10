@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DocumentDTO {
+    Long id;
     String name;
     Category category;
     FileDTO file;

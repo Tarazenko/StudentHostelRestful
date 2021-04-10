@@ -13,6 +13,7 @@ public class DocumentConverter {
 
     public DocumentDTO toDocumentDTO(Document document){
         return DocumentDTO.builder()
+                .id(document.getId())
                 .name(document.getName())
                 .category(document.getCategory())
                 .file(fileConverter.toFileDTO(document.getFile()))

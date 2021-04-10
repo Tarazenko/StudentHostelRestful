@@ -1,7 +1,9 @@
 package by.bntu.tarazenko.hostelrestful.services.impl;
 
 import by.bntu.tarazenko.hostelrestful.models.Category;
+import by.bntu.tarazenko.hostelrestful.models.Document;
 import by.bntu.tarazenko.hostelrestful.repository.CategoryRepository;
+import by.bntu.tarazenko.hostelrestful.repository.DocumentRepository;
 import by.bntu.tarazenko.hostelrestful.services.CategoryService;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.CategoryAlreadyExistException;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.EntityNotFoundException;
@@ -9,12 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    DocumentRepository documentRepository;
 
     @Override
     public List<Category> getAll() {
@@ -23,10 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new CategoryAlreadyExistException(String.format("Category with name %s exist",
-                    category.getName()));
-        }
+        checkExistByName(category);
         return categoryRepository.save(category);
     }
 
@@ -39,7 +42,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(Long id) {
-        checkExistById(id);
+        Category category = checkExistById(id);
+        List<Document> documents = documentRepository.findByCategory(category);
+        documents.forEach(document -> {
+            documentRepository.deleteById(document.getId());
+        });
         categoryRepository.deleteById(id);
     }
 
@@ -49,11 +56,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.getOne(id);
     }
 
-    private void checkExistById(Long id){
-        if (categoryRepository.findById(id).isPresent()) {
+    private Category checkExistById(Long id){
+        Optional<Category> category = categoryRepository.findById(id);
+        if (!category.isPresent()) {
             throw new EntityNotFoundException(String.format("Category with id %s not found.",
                     id));
         }
+        return category.get();
     }
 
     private void checkExistByName(Category category){
