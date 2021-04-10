@@ -48,7 +48,7 @@ public class DocumentController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         log.debug("Delete category with id - {}", categoryId);
-        categoryService.delete(categoryId);
+        categoryService.deleteById(categoryId);
         return ResponseEntity.ok().build();
     }
 
@@ -63,7 +63,7 @@ public class DocumentController {
     @PostMapping("/categories")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category savedCategory = categoryService.save(category);
+        Category savedCategory = categoryService.create(category);
         log.debug("Saved category - {}", category);
         return ResponseEntity.ok(category);
     }

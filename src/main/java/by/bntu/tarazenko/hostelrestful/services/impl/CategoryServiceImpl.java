@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -23,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category save(Category category) {
+    public Category create(Category category) {
         if (categoryRepository.existsByName(category.getName())) {
             throw new CategoryAlreadyExistException(String.format("Category with name %s exist",
                     category.getName()));
@@ -39,13 +38,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         checkExistById(id);
         categoryRepository.deleteById(id);
     }
 
     @Override
-    public Category getCategory(Long id) {
+    public Category getById(Long id) {
         checkExistById(id);
         return categoryRepository.getOne(id);
     }

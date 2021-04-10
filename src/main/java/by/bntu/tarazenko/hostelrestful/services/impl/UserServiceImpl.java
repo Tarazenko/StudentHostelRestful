@@ -24,12 +24,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(long id) {
+    public User create(User entity) {
+        return null;
+    }
+
+    @Override
+    public User getById(Long id) {
         return userRepository.getOne(id);
     }
 
     @Override
-    public void deleteUser(long id) {
+    public void deleteById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             log.debug("Delete user - {}", user);
@@ -38,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) {
+    public User update(User user) {
         Optional<User> optUser = userRepository.findById(user.getId());
         if (optUser.isPresent()) {
             User dbUser = optUser.get();
