@@ -27,7 +27,7 @@ public class NewsController {
     NewsConverter newsConverter;
 
     @GetMapping()
-    public ResponseEntity<List<NewsDTO>> getNewss() {
+    public ResponseEntity<List<NewsDTO>> getNews() {
         List<NewsDTO> news = newsService.getAll().stream().map(item ->
                newsConverter.toNewsDTO(item)
         ).collect(Collectors.toList());
@@ -37,11 +37,11 @@ public class NewsController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<News> createNews(@RequestBody News requestNews) {
+    public ResponseEntity<NewsDTO> createNews(@RequestBody News requestNews) {
         log.debug("News request - {}", requestNews);
         News news = newsService.create(requestNews);
         log.debug("News - {}", news);
-        return ResponseEntity.ok(news);
+        return ResponseEntity.ok(newsConverter.toNewsDTO(news));
     }
 
     @GetMapping("/{newsId}")
@@ -65,10 +65,10 @@ public class NewsController {
 
     @PutMapping("/{newsId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<News> updateNews(@RequestBody News requestNews) {
+    public ResponseEntity<NewsDTO> updateNews(@RequestBody News requestNews) {
         log.debug("News request - {}", requestNews);
         News news = newsService.update(requestNews);
         log.debug("News - {}", news);
-        return ResponseEntity.ok(news);
+        return ResponseEntity.ok(newsConverter.toNewsDTO(news));
     }
 }

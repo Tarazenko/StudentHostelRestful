@@ -1,9 +1,7 @@
 package by.bntu.tarazenko.hostelrestful.services.impl;
 
-import by.bntu.tarazenko.hostelrestful.models.Document;
 import by.bntu.tarazenko.hostelrestful.models.File;
 import by.bntu.tarazenko.hostelrestful.models.News;
-import by.bntu.tarazenko.hostelrestful.models.User;
 import by.bntu.tarazenko.hostelrestful.repository.FileRepository;
 import by.bntu.tarazenko.hostelrestful.repository.NewsRepository;
 import by.bntu.tarazenko.hostelrestful.services.NewsService;
