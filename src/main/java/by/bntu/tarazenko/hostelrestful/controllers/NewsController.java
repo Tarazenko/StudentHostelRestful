@@ -45,7 +45,6 @@ public class NewsController {
     }
 
     @GetMapping("/{newsId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<NewsDTO> getNews(@PathVariable("newsId") Long newsId) {
         log.info("Getting news by id - {}", newsId);
         News news = newsService.getById(newsId);
