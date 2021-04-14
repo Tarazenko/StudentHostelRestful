@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(	name = "news")
+@Table(name = "news")
 public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class News {
     private String preview;
 
     @NotBlank
-    @Size(max = 500)
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     /*    @ManyToMany(fetch = FetchType.LAZY)
