@@ -1,4 +1,4 @@
-package by.bntu.tarazenko.hostelrestful.payload.request;
+package by.bntu.tarazenko.hostelrestful.security.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

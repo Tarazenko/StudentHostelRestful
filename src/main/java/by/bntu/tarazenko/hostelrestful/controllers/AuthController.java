@@ -1,19 +1,16 @@
 package by.bntu.tarazenko.hostelrestful.controllers;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import by.bntu.tarazenko.hostelrestful.models.ERole;
-import by.bntu.tarazenko.hostelrestful.models.Role;
 import by.bntu.tarazenko.hostelrestful.models.User;
-import by.bntu.tarazenko.hostelrestful.payload.request.LoginRequest;
-import by.bntu.tarazenko.hostelrestful.payload.request.SignupRequest;
-import by.bntu.tarazenko.hostelrestful.payload.response.JwtResponse;
-import by.bntu.tarazenko.hostelrestful.payload.response.MessageResponse;
+import by.bntu.tarazenko.hostelrestful.security.payload.request.LoginRequest;
+import by.bntu.tarazenko.hostelrestful.security.payload.request.SignupRequest;
+import by.bntu.tarazenko.hostelrestful.security.payload.response.JwtResponse;
+import by.bntu.tarazenko.hostelrestful.security.payload.response.MessageResponse;
 import by.bntu.tarazenko.hostelrestful.repository.RoleRepository;
 import by.bntu.tarazenko.hostelrestful.repository.UserRepository;
 import by.bntu.tarazenko.hostelrestful.security.jwt.JwtUtils;
