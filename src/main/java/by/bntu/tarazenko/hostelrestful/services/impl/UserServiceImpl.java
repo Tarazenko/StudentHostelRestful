@@ -3,6 +3,7 @@ package by.bntu.tarazenko.hostelrestful.services.impl;
 import by.bntu.tarazenko.hostelrestful.models.User;
 import by.bntu.tarazenko.hostelrestful.repository.UserRepository;
 import by.bntu.tarazenko.hostelrestful.services.UserService;
+import by.bntu.tarazenko.hostelrestful.services.exceptions.BadRequestException;
 import by.bntu.tarazenko.hostelrestful.utils.UpdateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        return userRepository.getOne(id);
+        Optional<User> user = userRepository.findById(id);
+        if (!user.isPresent()){
+            throw new BadRequestException(String
+                    .format("No user with id - %s", user.get().getId()));
+        }
+        return user.get();
     }
 
     @Override
