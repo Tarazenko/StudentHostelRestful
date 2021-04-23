@@ -50,8 +50,9 @@ public class DocumentController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<?> updateCategory(@RequestBody Category category) {
         log.debug("Update category - {}", category);
-        categoryService.update(category);
-        return ResponseEntity.ok(category);
+        Category updatedCategory = categoryService.update(category);
+        log.debug("Updated category - {}", updatedCategory);
+        return ResponseEntity.ok(updatedCategory);
     }
 
     @PostMapping("/categories")
