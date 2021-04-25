@@ -1,6 +1,8 @@
 package by.bntu.tarazenko.hostelrestful.services.impl;
 
+import by.bntu.tarazenko.hostelrestful.models.Request;
 import by.bntu.tarazenko.hostelrestful.models.User;
+import by.bntu.tarazenko.hostelrestful.repository.RequestRepository;
 import by.bntu.tarazenko.hostelrestful.repository.UserRepository;
 import by.bntu.tarazenko.hostelrestful.services.UserService;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.BadRequestException;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RequestRepository requestRepository;
 
     @Override
     public List<User> getAll() {
@@ -61,4 +67,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    @Override
+    public List<Request> getRequests(Long userId) {
+        List<Request> requests = requestRepository.getByUserIdOrderByIdDesc(userId);
+        return requests;
+    }
 }

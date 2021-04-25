@@ -1,6 +1,7 @@
 package by.bntu.tarazenko.hostelrestful.controllers;
 
 import by.bntu.tarazenko.hostelrestful.converters.UserConverter;
+import by.bntu.tarazenko.hostelrestful.models.Request;
 import by.bntu.tarazenko.hostelrestful.models.User;
 import by.bntu.tarazenko.hostelrestful.models.dtos.UserDTO;
 import by.bntu.tarazenko.hostelrestful.services.UserService;
@@ -64,5 +65,13 @@ public class UserController {
         User updateUser = userService.update(user);
         log.debug("After update user - {}", updateUser);
         return  ResponseEntity.ok(userConverter.toUserDTO(updateUser));
+    }
+
+    @GetMapping("/{userId}/requests")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<Request>> getRequests(@PathVariable("userId") Long userId){
+        List<Request> requests = userService.getRequests(userId);
+        log.debug("User requests - {}", requests);
+        return  ResponseEntity.ok(requests);
     }
 }
