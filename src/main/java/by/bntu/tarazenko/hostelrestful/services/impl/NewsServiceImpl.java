@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> getAll() {
-        return newsRepository.findAll();
+        return newsRepository.findAllByOrderByIdDesc();
     }
 
     @Override
