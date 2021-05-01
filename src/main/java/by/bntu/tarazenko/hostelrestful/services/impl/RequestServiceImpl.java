@@ -8,16 +8,16 @@ import by.bntu.tarazenko.hostelrestful.repository.UserRepository;
 import by.bntu.tarazenko.hostelrestful.services.RequestService;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.BadRequestException;
 import by.bntu.tarazenko.hostelrestful.services.exceptions.EntityNotFoundException;
+import by.bntu.tarazenko.hostelrestful.utils.UpdateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class RequestServiceImpl implements RequestService {
 
     @Autowired
@@ -33,15 +33,15 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getAll() {
-        return requestRepository.findAll();
+        return requestRepository.findAllByOrderByIdDesc();
     }
 
     @Override
     public Request create(Request request) {
         Optional<User> user = userRepository.findById(request.getUser().getId());
-        if(!user.isPresent()){
+        if (!user.isPresent()) {
             throw new BadRequestException(String
-                    .format("No user with id - %s",request.getUser().getId()));
+                    .format("No user with id - %s", request.getUser().getId()));
         }
         request.setUser(user.get());
         request.setStatus(Status.WAITING);
@@ -50,7 +50,10 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request update(Request request) {
-        return null;
+        Request dbRequest = checkExistById(request.getId());
+        UpdateUtil.copyProperties(request, dbRequest);
+        return requestRepository.saveAndFlush(dbRequest);
+
     }
 
     @Override
@@ -59,7 +62,7 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.deleteById(id);
     }
 
-    private Request checkExistById(Long id){
+    private Request checkExistById(Long id) {
         Optional<Request> request = requestRepository.findById(id);
         if (!request.isPresent()) {
             throw new EntityNotFoundException(String.format("Request with id %s not found.",
