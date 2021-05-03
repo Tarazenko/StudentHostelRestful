@@ -36,7 +36,7 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        log.debug("Token - {}", token);
+        log.trace("Token - {}", token);
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 

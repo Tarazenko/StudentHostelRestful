@@ -31,16 +31,16 @@ public class NewsController {
         List<NewsDTO> news = newsService.getAll().stream().map(item ->
                newsConverter.toNewsDTO(item)
         ).collect(Collectors.toList());
-        log.debug("News - {}", news);
+        log.info("News count - {}", news.size());
         return ResponseEntity.ok(news);
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<NewsDTO> createNews(@RequestBody News requestNews) {
-        log.debug("News request - {}", requestNews);
+        log.trace("News request - {}", requestNews);
         News news = newsService.create(requestNews);
-        log.debug("News - {}", news);
+        log.trace("News - {}", news);
         return ResponseEntity.ok(newsConverter.toNewsDTO(news));
     }
 
@@ -48,7 +48,7 @@ public class NewsController {
     public ResponseEntity<NewsDTO> getNews(@PathVariable("newsId") Long newsId) {
         log.info("Getting news by id - {}", newsId);
         News news = newsService.getById(newsId);
-        log.info("Get news - {}", news);
+        log.trace("Get news - {}", news);
         return ResponseEntity.ok(newsConverter.toNewsDTO(news));
     }
 
@@ -65,9 +65,9 @@ public class NewsController {
     @PutMapping("/{newsId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<NewsDTO> updateNews(@RequestBody News requestNews) {
-        log.debug("News request - {}", requestNews);
+        log.info("Update news with id - {}", requestNews.getId());
         News news = newsService.update(requestNews);
-        log.debug("News - {}", news);
+        log.info("News with id {} updated", news);
         return ResponseEntity.ok(newsConverter.toNewsDTO(news));
     }
 }
