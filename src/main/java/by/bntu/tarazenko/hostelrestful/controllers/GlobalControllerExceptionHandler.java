@@ -1,10 +1,7 @@
 package by.bntu.tarazenko.hostelrestful.controllers;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -98,23 +95,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(SQLException.class)
     protected ResponseEntity<Object> handleSqlException(SQLException ex) {
-        log.error("Invalid order exception stack: {} ", Arrays.toString(ex.getStackTrace()));
+        log.warn("Invalid order exception stack: {} ", Arrays.toString(ex.getStackTrace()));
         ErrorDTO errorDTO = new ErrorDTO(HttpStatus.BAD_REQUEST, ex.getClass().getName(), ex.getMessage());
-        return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
-    }
-
-    @ExceptionHandler({MalformedJwtException.class, SignatureException.class,
-            UnsupportedJwtException.class, IllegalArgumentException.class})
-    protected ResponseEntity<Object> handleInvalidToken(Exception ex) {
-        log.error("Invalid token: {} ", Arrays.toString(ex.getStackTrace()));
-        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.UNAUTHORIZED, ex.getClass().getName(), ex.getMessage());
-        return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    protected ResponseEntity<Object> handleMalformedJwtException(ExpiredJwtException ex) {
-        log.error("Invalid token: {} ", Arrays.toString(ex.getStackTrace()));
-        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.UNAUTHORIZED, ex.getClass().getName(), ex.getMessage());
         return new ResponseEntity<>(errorDTO, new HttpHeaders(), errorDTO.getHttpStatus());
     }
 
