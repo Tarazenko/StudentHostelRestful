@@ -17,7 +17,7 @@ public class Document {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 40)
     private String name;
 
     @ManyToOne

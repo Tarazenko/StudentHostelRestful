@@ -17,11 +17,11 @@ public class News {
     private Long id;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 50)
     private String title;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 100)
     private String preview;
 
     @NotBlank

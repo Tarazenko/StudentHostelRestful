@@ -17,6 +17,6 @@ public class Category {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 35)
     private String name;
 }
