@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()){
+        if (!user.isPresent()) {
             throw new BadRequestException(String
-                    .format("No user with id - %s", user.get().getId()));
+                    .format("No user with id - %s", id));
         }
         return user.get();
     }
@@ -51,12 +51,23 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             log.debug("Delete user - {}", user);
             userRepository.deleteById(id);
+        } else {
+            throw new BadRequestException(String
+                    .format("No user with id - %s", id));
         }
     }
 
     @Override
     public User update(User user) {
         Optional<User> optUser = userRepository.findById(user.getId());
+        if (user.getEmail() == null || !optUser.get().getEmail().equals(user.getEmail())) {
+            boolean isExistEmail = userRepository.existsByEmail(user.getEmail());
+            if (isExistEmail) {
+                String errorMessage = String.format("User with email - %s, already exist", user.getEmail());
+                log.error(errorMessage);
+                throw new BadRequestException(errorMessage);
+            }
+        }
         if (optUser.isPresent()) {
             User dbUser = optUser.get();
             UpdateUtil.copyProperties(user, dbUser);
