@@ -59,7 +59,7 @@ public class DocumentController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category savedCategory = categoryService.create(category);
-        log.debug("Saved category - {}", category);
+        log.debug("Saved category - {}", savedCategory);
         return ResponseEntity.ok(category);
     }
 
