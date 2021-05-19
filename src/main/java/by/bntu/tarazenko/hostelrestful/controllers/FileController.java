@@ -19,35 +19,35 @@ import java.util.stream.Collectors;
 @Controller
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @Slf4j
+@RequestMapping("files")
 public class FileController {
 
-  @Autowired
-  private FileStorageService storageService;
-  @Autowired
-  private FileConverter fileConverter;
+    @Autowired
+    private FileStorageService storageService;
+    @Autowired
+    private FileConverter fileConverter;
 
-  @PostMapping("/upload")
-  public ResponseEntity<FileDTO> uploadFile(@RequestParam("file") MultipartFile file) {
-      File savedFile = storageService.store(file);
-      log.info("Upload {} successful", file.getOriginalFilename());
-      return ResponseEntity.status(HttpStatus.OK).body(fileConverter.toFileDTO(savedFile));
-  }
+    @PostMapping("/upload")
+    public ResponseEntity<FileDTO> uploadFile(@RequestParam("file") MultipartFile file) {
+        File savedFile = storageService.store(file);
+        log.info("Upload {} successful", file.getOriginalFilename());
+        return ResponseEntity.status(HttpStatus.OK).body(fileConverter.toFileDTO(savedFile));
+    }
 
-  @GetMapping("/files")
-  public ResponseEntity<List<FileDTO>> getListFiles() {
-    List<FileDTO> files = storageService.getAllFiles().map(dbFile -> {
-      return fileConverter.toFileDTO(dbFile);
-    }).collect(Collectors.toList());
+    @GetMapping()
+    public ResponseEntity<List<FileDTO>> getListFiles() {
+        List<FileDTO> files = storageService.getAllFiles().map(dbFile -> {
+            return fileConverter.toFileDTO(dbFile);
+        }).collect(Collectors.toList());
 
-    return ResponseEntity.status(HttpStatus.OK).body(files);
-  }
+        return ResponseEntity.status(HttpStatus.OK).body(files);
+    }
 
-  @GetMapping("/files/{id}")
-  public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
-    File file = storageService.getFile(id);
-
-    return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-        .body(file.getData());
-  }
+    @GetMapping("{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        File file = storageService.getFile(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .body(file.getData());
+    }
 }
